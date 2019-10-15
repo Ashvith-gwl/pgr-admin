@@ -7,6 +7,7 @@ import Navbar from './Navbar'
 import { Link } from 'react-router-dom'
 import { createMuiTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
+import { relative } from 'path';
 
 const theme = createMuiTheme({ typography: { useNextVariants: true } });
 
@@ -29,21 +30,24 @@ const styles = {
     fontSize: '25px',
     padding: '15px',
     color: '#ffffff',
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    margin: '0 auto',
     width: '350px',
-    cursor: 'pointer',
-    marginTop: '37%',
+    height: '-webkit-fill-available',
+    display: 'flex',
+    alignItems: 'center'
   },
   "divsec1:hover": {
     border: '1px solid #333',
+
   },
   MuiGridcontainer: {
-    height: '-webkit-fill-available'
+    // height: '-webkit-fill-available'
+    height: '100vh'
   },
-  divAtag:{
-    color:"#ffffff",
-    textDecoration:"none",
+  divAtag: {
+    color: "#ffffff",
+    textDecoration: "none",
+    cursor: 'pointer'
   },
 };
 
@@ -55,7 +59,7 @@ function ButtonAppBar(props) {
       <Grid container style={styles.MuiGridcontainer}>
         <Grid item md={6} xs={12} style={styles.div1} >
           <div style={styles.divsec1}>
-          <Link to="/complaint" style={styles.divAtag}>Anonymous Complaint</Link>
+            <Link to="/complaint" style={styles.divAtag}>Anonymous Complaint</Link>
           </div>
         </Grid>
         <Grid item md={6} xs={12}  >

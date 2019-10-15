@@ -1,5 +1,5 @@
 import React from 'react';
-// import LoginNav from './LoginNav';
+
 import { TextField, Grid, makeStyles, FormControl,Button, InputLabel,Select, MenuItem } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
@@ -39,7 +39,7 @@ function Comform() {
   }
   return (
     <div>
-      {/* <LoginNav /> */}
+      
       <Grid container direction="row" >
         <Grid md={6} align="right">
           <div className={classes.labelitem}>

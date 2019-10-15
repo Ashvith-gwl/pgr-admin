@@ -1,136 +1,167 @@
-import React from 'react';
-// import LoginNav from './LoginNav';
-import { TextField, Grid, makeStyles, FormControl, Button, InputLabel, Select, MenuItem } from "@material-ui/core";
+import React, { Component } from 'react'
+import { TextField, Grid, FormControl, Button, InputLabel, Select, MenuItem } from "@material-ui/core";
 import { Link } from 'react-router-dom'
+import classes from './Complaint.module.css'
+import axios from 'axios'
+class Complain extends Component {
+    state = {
+        name: '',
+        open: false,
+        publicKey: '',
+        enableFlag: true
+    };
 
-const useStyles = makeStyles(theme => ({
-    textField: {
-        width: '300px',
-    },
-    labelitem: {
-        margin: ' 30px 40px'
-    },
-    slecetCat: {
-        marginTop: '13px',
-    },
-    btnn: {
-        margin: '21px',
-        width: '12%',
-        padding: '10px'
-    },
-    divAtag: {
-        color: "#2196f3",
-        textDecoration: "none",
-      },
-}));
-
-function Comform() {
-
-    const classes = useStyles();
-    const [age, setAge] = React.useState('');
-    const [open, setOpen] = React.useState(false);
-
-    function handleChange(event) {
-        setAge(event.target.value);
+    componentDidMount() {
+        axios.get(`http://localhost:8080/api/public_key`)
+            .then(response => {
+                console.log(response);
+                this.setState({ publicKey: response.data.public_key[0].uuid })
+            })
+            .catch(error => console.log(error)
+            )
     }
 
-    function handleClose() {
-        setOpen(false);
+    handleChange = event => {
+        this.setState({ [event.target.name]: event.target.value }, this.checkPublicKeyHandler);
+    };
+
+    handleClose = () => {
+        this.setState({ open: false });
+    };
+
+    handleOpen = () => {
+        this.setState({ open: true });
+    };
+
+    checkPublicKeyHandler = () => {
+        if (this.state.verification === this.state.publicKey) {
+            this.setState({
+                enableFlag: false
+            })
+        } else {
+            this.setState({
+                enableFlag: true
+            })
+        }
     }
 
-    function handleOpen() {
-        setOpen(true);
+    postComplaintHandler = () => {
+        axios
+            .post(`http://localhost:8080/api/complain/`, {
+                "category_name": this.state.name,
+                "complain_details": this.state.complaint,
+                "type": 'anonymous',
+                "created_by": 'anonymous'
+            })
+            .then(response => {
+                alert('Success')
+
+                this.setState({
+                    verification: '',
+                    complaint: '',
+                    name: '',
+                    enableFlag: true
+                })
+
+            })
+            .catch(err => console.log(err));
     }
-    return (
-        <div>
-            <Link to="/" className={classes.divAtag}>
-                Back
-            </Link>
-            {/* <LoginNav /> */}
-            <Grid container direction="row" >
-                <Grid item md={6} align="right">
-                    <div className={classes.labelitem}>
-                        <label htmlFor="outlined-name">Verification Code</label>
-                    </div>
-                </Grid>
-                <Grid md={6} >
-                    <TextField
-                        id="outlined-name"
-                        label="Code"
-                        className={classes.textField}
-                        placeholder="code"
-                        // onChange={handleChange('name')}
-                        margin="normal"
-                        variant="outlined"
-                    />
-                </Grid>
-            </Grid>
 
+    render() {
+        const { enableFlag } = this.state
 
-            <Grid container direction="row" >
-                <Grid md={6} align="right">
-                    <div className={classes.labelitem}>
-                        <div className={classes.button} onClick={handleOpen}>
-                            Select Category
-      </div>
-                    </div>
-                </Grid>
-                <Grid md={6} >
-                    <FormControl className={[classes.formControl, classes.slecetCat]}>
-                        <InputLabel htmlFor="demo-controlled-open-select">Category</InputLabel>
-                        <Select
-                            open={open}
+        return (
+            <div>
+                <Link to="/" className={classes.divAtag}>Back</Link>
+                {/* <div className={classes.login}> */}
+                <Grid container direction="row" >
+                    <Grid md={6} align="right">
+                        <div className={classes.labelitem}>
+                            <label htmlFor="outlined-name">Verification Code</label>
+                        </div>
+                    </Grid>
+                    <Grid md={6} align="left">
+                        <TextField
+                            required
+                            id="outlined-required"
+                            label="Required"
                             className={classes.textField}
-                            onClose={handleClose}
-                            onOpen={handleOpen}
-                            value={age}
-                            onChange={handleChange}
-                            inputProps={{
-                                name: 'age',
-                                id: 'demo-controlled-open-select',
-                            }}
-                        >
-                            <MenuItem value="">
-                                <em>None</em>
-                            </MenuItem>
-                            <MenuItem value={10}>Ten</MenuItem>
-                            <MenuItem value={20}>Twenty</MenuItem>
-                            <MenuItem value={30}>Thirty</MenuItem>
-                        </Select>
-                    </FormControl>
-                </Grid>
-            </Grid>
+                            onChange={this.handleChange}
+                            margin="normal"
+                            variant="outlined"
+                            name="verification"
+                            value={this.state.verification}
+                        />
+                    </Grid>
 
-            <Grid container direction="row" >
-                <Grid md={6} align="right">
-                    <div className={classes.labelitem}>
-                        <label htmlFor="outlined-name">Complaint</label>
-                    </div>
                 </Grid>
-                <Grid md={6}  >
-                    <TextField
-                        multiline="true"
-                        rows={4}
-                        rowsMax={8}
-                        id="outlined-name"
-                        label="complaint"
-                        className={classes.textField}
-                        placeholder="code"
-                        // onChange={handleChange('name')}
-                        margin="normal"
-                        variant="outlined"
-                    />
+                <Grid container direction="row" >
+                    <Grid md={6} align="right">
+                        <div className={classes.labelitem}>
+                            Select Category
+                            </div>
+                    </Grid>
+
+                    <Grid md={6} >
+                        <FormControl className={classes.slecetCat}>
+                            <InputLabel>Categories</InputLabel>
+                            <Select
+                                className={classes.textField}
+                                open={this.state.open}
+                                onClose={this.handleClose}
+                                onOpen={this.handleOpen}
+                                value={this.state.name}
+                                onChange={this.handleChange}
+                                disabled={enableFlag}
+                                value={this.state.name}
+                                inputProps={{
+                                    name: 'name',
+                                    id: 'demo-controlled-open-select',
+                                }}>
+
+                                <MenuItem value="">
+                                    <em>None</em>
+                                </MenuItem>
+                                <MenuItem value={"IT"}>IT</MenuItem>
+                                <MenuItem value={"HR"}>HR</MenuItem>
+                                <MenuItem value={"Network"}>Network</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
                 </Grid>
-            </Grid>
-
-            <Grid direction="row" align="center">
-                <Button variant="contained" color="primary" className={[classes.button, classes.btnn]}>
-                    Submit
-      </Button>
-            </Grid>
-
-        </div>
-    );
+                <Grid container direction="row" >
+                    <Grid md={6} align="right">
+                        <div className={classes.labelitem}>
+                            <label htmlFor="outlined-name">Complaint</label>
+                        </div>
+                    </Grid>
+                    <Grid md={6}  >
+                        <TextField
+                            required
+                            disabled={enableFlag}
+                            multiline="true"
+                            rows={4}
+                            rowsMax={8}
+                            id="outlined-name"
+                            label="Complaint"
+                            className={classes.textField}
+                            placeholder="code"
+                            onChange={this.handleChange}
+                            margin="normal"
+                            variant="outlined"
+                            name='complaint'
+                            value={this.state.complaint}
+                        />
+                    </Grid>
+                </Grid>
+                <Grid direction="row" align="center">
+                    <Button className={classes.btnn} disabled={enableFlag} variant="contained" color="primary" onClick={this.postComplaintHandler}>
+                        Submit</Button>
+                </Grid>
+            {/* </div> */}
+            </div>
+        )
+    }
 }
 
-export default Comform;
+export default Complain

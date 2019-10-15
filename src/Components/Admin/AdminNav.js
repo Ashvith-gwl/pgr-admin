@@ -5,6 +5,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import { Link } from 'react-router-dom'
 
 const styles = {
   root: {
@@ -29,10 +30,9 @@ function Navbar(props) {
       <AppBar position="relative" className={classes.nav}>
         <Toolbar>
           <Typography variant="h5" color="inherit" className={classes.grow}>
-            App-Name
+            PGR
           </Typography>
-          <Button color="inherit">Home</Button>
-          <Button color="inherit">Dashboard</Button>
+          <Button color="inherit"><Link to='/'>Logout</Link></Button>
         </Toolbar>
       </AppBar>
     </div>

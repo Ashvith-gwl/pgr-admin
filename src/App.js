@@ -9,7 +9,6 @@ import AdminLogin from './Components/Admin/AdminLogin'
 import AdminHome from './Components/Admin/AdminHome'
 import User from './Components/User/UserHome'
 
-import CompList from './Components/User/Table'
 
 
 function App() {
@@ -25,8 +24,7 @@ function App() {
 
         <Route path="/user-home" component={User} />
         <Route path="/user-complaint" component={UserComplaint} />
-        <Route path="/user-list" component={CompList} />
-        
+                
       </div>
     </BrowserRouter>
   );

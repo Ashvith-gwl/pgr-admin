@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-// import { makeStyles } from '@material-ui/styles';
+
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -59,10 +59,10 @@ class TextFields extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
+      username: '',
       password: '',
-      formErrors: { email: '', password: '' },
-      emailValid: false,
+      formErrors: { username: '', password: '' },
+      usernameValid: false,
       passwordValid: false,
       formValid: false
     }
@@ -77,30 +77,30 @@ class TextFields extends Component {
 
   validateField(fieldName, value) {
     let fieldValidationErrors = this.state.formErrors;
-    let emailValid = this.state.emailValid;
+    let usernameValid = this.state.usernameValid;
     let passwordValid = this.state.passwordValid;
 
     switch (fieldName) {
-      case 'email':
-        emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-        fieldValidationErrors.email = emailValid ? '' : ' is invalid';
+      case 'username':
+        usernameValid = value.length > 4
+        fieldValidationErrors.username = usernameValid ? '' : ' is Invalid';
         break;
       case 'password':
         passwordValid = value.length >= 4;
-        fieldValidationErrors.password = passwordValid ? '' : ' is too short';
+        fieldValidationErrors.password = passwordValid ? '' : ' is Too Short';
         break;
       default:
         break;
     }
     this.setState({
       formErrors: fieldValidationErrors,
-      emailValid: emailValid,
+      usernameValid: usernameValid,
       passwordValid: passwordValid
     }, this.validateForm);
   }
 
   validateForm() {
-    this.setState({ formValid: this.state.emailValid && this.state.passwordValid });
+    this.setState({ formValid: this.state.usernameValid && this.state.passwordValid });
   }
 
   errorClass(error) {
@@ -118,18 +118,18 @@ class TextFields extends Component {
               <span className={classes.text}>Login</span>
               <FormErrors formErrors={this.state.formErrors} />
 
-              <div className={`form-group ${this.errorClass(this.state.formErrors.email)}`}>
+              <div className={`form-group ${this.errorClass(this.state.formErrors.username)}`}>
                 <Grid item md={6}  >
                   <TextField
-                    id="outlined-email-input"
-                    label="Email"
+                    id="outlined-username-input"
+                    label="Username"
                     className={classes.textField}
-                    type="email"
-                    name="email"
-                    autoComplete="email"
+                    type="text"
+                    name="username"
+                    autoComplete="username"
                     margin="normal"
                     variant="outlined"
-                    value={this.state.email}
+                    value={this.state.username}
                     onChange={this.handleUserInput}
                   />
 
@@ -156,7 +156,7 @@ class TextFields extends Component {
               <Grid item md={12} >
 
                 <Button className={classes.btn} variant="contained" disabled={!this.state.formValid}>
-                  <Link to="/user-home" className={classes.divAtag}>Login
+                  <Link to="/user-complaint" className={classes.divAtag}>Login
                   </Link>
                 </Button>
 

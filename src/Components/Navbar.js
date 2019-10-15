@@ -5,8 +5,6 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-// import IconButton from '@material-ui/core/IconButton';
-// import MenuIcon from '@material-ui/icons/Menu';
 import { Link } from 'react-router-dom'
 
 const styles = {
@@ -34,14 +32,10 @@ function Navbar(props) {
   const { classes } = props;
   return (
     <div className={classes.root}>
-      <AppBar position="absolute" className={classes.nav}>
-      {/* <AppBar position="relative" > */}
+      <AppBar position="absolute" className={classes.nav}> 
         <Toolbar>
-          {/* <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-            <MenuIcon />
-          </IconButton> */}
           <Typography variant="h5" color="inherit" className={classes.grow}>
-            App-Name
+            PGR
           </Typography>
           <Button color="primary">
           <Link to="/admin-login" className={classes.divAtag}>Admin Login</Link>
