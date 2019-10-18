@@ -20,6 +20,10 @@ const styles = {
   },
   nav:{
     backgroundColor: '#2196f3',
+  },
+  divAtag:{
+    color:"#fff",
+    textDecoration:"none",
   }
 };
 
@@ -32,9 +36,9 @@ function Navbar(props) {
           <Typography variant="h5" color="inherit" className={classes.grow}>
             PGR
           </Typography>
-          <Button color="inherit"><Link to='user-complaint'>Home</Link></Button>
-          <Button color="inherit"><Link to='user-home'>Dashboard</Link></Button>
-          <Button color="inherit">Logout</Button>
+          <Button color="inherit"><Link to='user-complaint' className={classes.divAtag}>Home</Link></Button>
+          <Button color="inherit"><Link to='user-home' className={classes.divAtag}>Dashboard</Link></Button>
+          <Button color="inherit"><Link to='/' className={classes.divAtag}>Logout</Link></Button>
         </Toolbar>
       </AppBar>
     </div>

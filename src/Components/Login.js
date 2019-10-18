@@ -71,6 +71,7 @@ class TextFields extends Component {
   handleUserInput = (e) => {
     const name = e.target.name;
     const value = e.target.value;
+        
     this.setState({ [name]: value },
       () => { this.validateField(name, value) });
   }
@@ -156,8 +157,7 @@ class TextFields extends Component {
               <Grid item md={12} >
 
                 <Button className={classes.btn} variant="contained" disabled={!this.state.formValid}>
-                  <Link to="/user-complaint" className={classes.divAtag}>Login
-                  </Link>
+                  <Link to="/user-complaint" className={classes.divAtag}>Login</Link>
                 </Button>
 
               </Grid>

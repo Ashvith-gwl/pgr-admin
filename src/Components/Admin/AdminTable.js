@@ -112,10 +112,9 @@ class SimpleTable extends Component {
                     <TableCell style={{ padding: '5px 5px', wordBreak: 'break-word', width: '200px' }}>{row.complain_details}</TableCell>
                     <TableCell >{row.picture}</TableCell>
                     <TableCell >{row.user_id}</TableCell>
-                    <TableCell >{row.status} {row.status === 'pending' ? <button disabled={row.uuid === tempUUID && comment.length > 10 ? false : true} onClick={e => submitCommentHandler(e, row.uuid)}><CheckCircleRoundedIcon /> </button> : null}</TableCell>
+                    <TableCell >{row.status} {row.status === 'Pending' ? <button disabled={row.uuid === tempUUID && comment.length > 10 ? false : true} onClick={e => submitCommentHandler(e, row.uuid)}><CheckCircleRoundedIcon /> </button> : null}</TableCell>
                     <TableCell >{row.type}</TableCell>
                     <TableCell >{row.comment} {row.comment === null ?
-
                       <TextField
                         required
                         id="outlined-required"
