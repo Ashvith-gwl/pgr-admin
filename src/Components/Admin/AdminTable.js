@@ -45,7 +45,7 @@ class SimpleTable extends Component {
     const { complainHandler } = this;
 
     axios
-      .get("http://localhost:8080/api/complain")
+      .get("https://whispering-fortress-83775.herokuapp.com/api/complain")
       .then(response => {
         complainHandler(response.data.complain);
       })
@@ -65,7 +65,7 @@ class SimpleTable extends Component {
 
   submitCommentHandler = (e, uuid) => {
     axios
-      .put(`http://localhost:8080/api/complain/${uuid}`, {
+      .put(`https://whispering-fortress-83775.herokuapp.com/api/complain/${uuid}`, {
         "comment": this.state.comment,
         "updated_by": "XXXXXXXXX"
       })

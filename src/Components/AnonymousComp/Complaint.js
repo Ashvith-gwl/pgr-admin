@@ -12,7 +12,7 @@ class Complain extends Component {
     };
 
     componentDidMount() {
-        axios.get(`http://localhost:8080/api/public_key`)
+        axios.get(`https://whispering-fortress-83775.herokuapp.com/api/public_key`)
             .then(response => {
                 console.log(response);
                 this.setState({ publicKey: response.data.public_key[0].uuid })
@@ -47,7 +47,7 @@ class Complain extends Component {
 
     postComplaintHandler = () => {
         axios
-            .post(`http://localhost:8080/api/complain/`, {
+            .post(`https://whispering-fortress-83775.herokuapp.com/api/complain/`, {
                 "category_name": this.state.name,
                 "complain_details": this.state.complaint,
                 "type": 'anonymous',

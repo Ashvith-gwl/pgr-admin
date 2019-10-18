@@ -44,7 +44,7 @@ class SimpleTable extends Component {
     const { complainHandler } = this;
 
     axios
-      .get("http://localhost:8080/api/complain")
+      .get("https://whispering-fortress-83775.herokuapp.com/api/complain")
       .then(response => {
 
         complainHandler(response.data.complain);
@@ -68,7 +68,7 @@ class SimpleTable extends Component {
 
 
     axios
-      .delete(`http://localhost:8080/api/complain/${uuid}`)
+      .delete(`https://whispering-fortress-83775.herokuapp.com/api/complain/${uuid}`)
       .then(response => {
 
         this.refreshHandler();

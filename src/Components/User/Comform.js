@@ -38,7 +38,7 @@ class Complain extends Component {
   postComplaintHandler = () => {
 
     axios
-      .post(`http://localhost:8080/api/complain/`, {
+      .post(`https://whispering-fortress-83775.herokuapp.com/api/complain/`, {
         "category_name": this.state.name,
         "complain_details": this.state.complaint,
         "type": 'login',
