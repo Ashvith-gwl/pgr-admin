@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom'
 
 import { FormErrors } from './FormErrors';
+import axios from 'axios';
 
 
 const styles = theme => ({
@@ -56,70 +57,98 @@ const styles = theme => ({
 
 class TextFields extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      username: '',
-      password: '',
-      formErrors: { username: '', password: '' },
-      usernameValid: false,
-      passwordValid: false,
-      formValid: false
-    }
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     username: '',
+  //     password: '',
+  //     formErrors: { username: '', password: '' },
+  //     usernameValid: false,
+  //     passwordValid: false,
+  //     formValid: false
+  //   }
+  // }
+
+  // handleUserInput = (e) => {
+  //   const name = e.target.name;
+  //   const value = e.target.value;
+
+  //   this.setState({ [name]: value },
+  //     () => { this.validateField(name, value) });
+  // }
+
+  // validateField(fieldName, value) {
+  //   let fieldValidationErrors = this.state.formErrors;
+  //   let usernameValid = this.state.usernameValid;
+  //   let passwordValid = this.state.passwordValid;
+
+  //   switch (fieldName) {
+  //     case 'username':
+  //       usernameValid = value.length > 4
+  //       fieldValidationErrors.username = usernameValid ? '' : ' is Invalid';
+  //       break;
+  //     case 'password':
+  //       passwordValid = value.length >= 4;
+  //       fieldValidationErrors.password = passwordValid ? '' : ' is Too Short';
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  //   this.setState({
+  //     formErrors: fieldValidationErrors,
+  //     usernameValid: usernameValid,
+  //     passwordValid: passwordValid
+  //   }, this.validateForm);
+  // }
+
+  // validateForm() {
+  //   this.setState({ formValid: this.state.usernameValid && this.state.passwordValid });
+  // }
+
+  // errorClass(error) {
+  //   return (error.length === 0 ? '' : 'has-error');
+  // }
+
+  state = {
+    username: '',
+    password: '',
+    serverDetails: ''
   }
 
-  handleUserInput = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-        
-    this.setState({ [name]: value },
-      () => { this.validateField(name, value) });
+  handleUserInput = event => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
+
+  loginHandler = () => {
+    const { username, password } = this.state
+    console.log(username, password);
+
+    axios.post(`https://evening-dawn-93464.herokuapp.com/api/login`, {
+      "username": username,
+      "password": password
+    })
+      .then(response => {
+        this.setState({ serverDetails: response.data.all[0] })
+        console.log(response);
+
+      })
+      .catch(error => console.log(error)
+      )
   }
-
-  validateField(fieldName, value) {
-    let fieldValidationErrors = this.state.formErrors;
-    let usernameValid = this.state.usernameValid;
-    let passwordValid = this.state.passwordValid;
-
-    switch (fieldName) {
-      case 'username':
-        usernameValid = value.length > 4
-        fieldValidationErrors.username = usernameValid ? '' : ' is Invalid';
-        break;
-      case 'password':
-        passwordValid = value.length >= 4;
-        fieldValidationErrors.password = passwordValid ? '' : ' is Too Short';
-        break;
-      default:
-        break;
-    }
-    this.setState({
-      formErrors: fieldValidationErrors,
-      usernameValid: usernameValid,
-      passwordValid: passwordValid
-    }, this.validateForm);
-  }
-
-  validateForm() {
-    this.setState({ formValid: this.state.usernameValid && this.state.passwordValid });
-  }
-
-  errorClass(error) {
-    return (error.length === 0 ? '' : 'has-error');
-  }
-
 
   render() {
     const { classes } = this.props;
+    const { loginHandler } = this  
+
     return (
       <div>
         <form autoComplete="off" className={classes.froms}>
           <Grid container direction="row" justify="center" alignitems="center">
             <div className={classes.login}>
               <span className={classes.text}>Login</span>
-              <FormErrors formErrors={this.state.formErrors} />
-
-              <div className={`form-group ${this.errorClass(this.state.formErrors.username)}`}>
+              {/* <FormErrors formErrors={this.state.formErrors} /> */}
+              {/* className={`form-group ${this.errorClass(this.state.formErrors.username)}`} */}
+              <div >
                 <Grid item md={6}  >
                   <TextField
                     id="outlined-username-input"
@@ -136,8 +165,9 @@ class TextFields extends Component {
 
                 </Grid>
               </div>
+              {/* className={`form-group ${this.errorClass(this.state.formErrors.password)}`} */}
 
-              <div className={`form-group ${this.errorClass(this.state.formErrors.password)}`}>
+              <div >
                 <Grid item md={6}>
                   <TextField
                     id="outlined-password-input"
@@ -156,8 +186,11 @@ class TextFields extends Component {
 
               <Grid item md={12} >
 
-                <Button className={classes.btn} variant="contained" disabled={!this.state.formValid}>
+                {/* <Button className={classes.btn} variant="contained" disabled={!this.state.formValid}>
                   <Link to="/user-complaint" className={classes.divAtag}>Login</Link>
+                </Button> */}
+
+                <Button className={classes.btn} variant="contained" onClick={loginHandler}>Login
                 </Button>
 
               </Grid>
