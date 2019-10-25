@@ -4,14 +4,33 @@ import { TextField, Grid, FormControl, Button, InputLabel, Select, MenuItem } fr
 import classes from '../AnonymousComp/Complaint.module.css'
 import axios from 'axios'
 import LoginNav from './LoginNav'
+import { Redirect } from 'react-router-dom'
 
 class Complain extends Component {
   state = {
     name: '',
     open: false,
     complaint: '',
-    enableFlag: true
+    enableFlag: true,
+    redirect: false
   };
+
+  componentDidMount() {
+    this.validateFromServer()
+  }
+
+  validateFromServer = () => {
+    axios.post(`https://evening-dawn-93464.herokuapp.com/api/verify`, {
+      "auth_token": sessionStorage.getItem('serverAUTHTOKEN')
+    })
+      .then(response => {
+        if (!response.data.isloggedIn) {
+          this.setState({ redirect: true })
+        }
+      })
+      .catch(error => console.log(error)
+      )
+  }
 
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value }, this.validateHandler);
@@ -36,13 +55,15 @@ class Complain extends Component {
 
 
   postComplaintHandler = () => {
-
+    let uuid = sessionStorage.getItem('serverUUID')
     axios
-      .post(`https://whispering-fortress-83775.herokuapp.com/api/complain/`, {
+      .post(`https://whispering-fortress-83775.herokuapp.com/api/complain`, {
+        "uuid": uuid,
         "category_name": this.state.name,
         "complain_details": this.state.complaint,
-        "type": 'login',
-        "created_by": 'username'
+        "user_id": sessionStorage.getItem('serverUSERNAME'),
+        "type": 'Login',
+        "created_by": sessionStorage.getItem('serverUSERNAME')
       })
       .then(response => {
 
@@ -51,7 +72,7 @@ class Complain extends Component {
           name: '',
           enableFlag: true
         })
-
+        alert('Success')
       })
       .catch(err => console.log(err));
   }
@@ -124,6 +145,7 @@ class Complain extends Component {
 
     return (
       <div>
+        {this.state.redirect ? <Redirect to="/" /> : null}
         <LoginNav />
         {content}
       </div >

@@ -5,11 +5,10 @@ import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-
-import { Link } from 'react-router-dom'
-
-import { FormErrors } from './FormErrors';
+import { Redirect } from 'react-router-dom'
 import axios from 'axios';
+
+
 
 
 const styles = theme => ({
@@ -24,7 +23,7 @@ const styles = theme => ({
     backgroundColor: '#2196f3',
     color: '#fff',
     margin: '16px',
-    padding: '0px'
+    padding: '10px 30px'
   },
   dense: {
     marginTop: 16,
@@ -46,91 +45,46 @@ const styles = theme => ({
     color: ' #2196f3',
     fontSize: '25px',
     fontWeight: 500,
-  },
-  divAtag: {
-    color: "#ffffff",
-    textDecoration: "none",
-    padding: '10px 30px'
-  },
+  }
 });
 
 
 class TextFields extends Component {
 
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     username: '',
-  //     password: '',
-  //     formErrors: { username: '', password: '' },
-  //     usernameValid: false,
-  //     passwordValid: false,
-  //     formValid: false
-  //   }
-  // }
-
-  // handleUserInput = (e) => {
-  //   const name = e.target.name;
-  //   const value = e.target.value;
-
-  //   this.setState({ [name]: value },
-  //     () => { this.validateField(name, value) });
-  // }
-
-  // validateField(fieldName, value) {
-  //   let fieldValidationErrors = this.state.formErrors;
-  //   let usernameValid = this.state.usernameValid;
-  //   let passwordValid = this.state.passwordValid;
-
-  //   switch (fieldName) {
-  //     case 'username':
-  //       usernameValid = value.length > 4
-  //       fieldValidationErrors.username = usernameValid ? '' : ' is Invalid';
-  //       break;
-  //     case 'password':
-  //       passwordValid = value.length >= 4;
-  //       fieldValidationErrors.password = passwordValid ? '' : ' is Too Short';
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  //   this.setState({
-  //     formErrors: fieldValidationErrors,
-  //     usernameValid: usernameValid,
-  //     passwordValid: passwordValid
-  //   }, this.validateForm);
-  // }
-
-  // validateForm() {
-  //   this.setState({ formValid: this.state.usernameValid && this.state.passwordValid });
-  // }
-
-  // errorClass(error) {
-  //   return (error.length === 0 ? '' : 'has-error');
-  // }
-
   state = {
     username: '',
     password: '',
-    serverDetails: ''
+    serverDetails: {},
+    redirect: false,
+    serverErrorFlag: false
   }
 
   handleUserInput = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
 
+  setHandler = (details, flag, auth) => {
+
+    sessionStorage.setItem('serverUUID', details.uuid);
+    sessionStorage.setItem('serverUSERNAME', details.user_name);
+    sessionStorage.setItem('serverAUTHTOKEN', auth);
+    this.setState({ serverDetails: details, redirect: flag, auth_token: auth })
+  }
+
   loginHandler = () => {
     const { username, password } = this.state
-    console.log(username, password);
 
     axios.post(`https://evening-dawn-93464.herokuapp.com/api/login`, {
-      "username": username,
+      "user_name": username,
       "password": password
     })
       .then(response => {
-        this.setState({ serverDetails: response.data.all[0] })
-        console.log(response);
-
+        if (response.data.login_message === 'Invalid User/ Password') {
+          this.setState({ serverError: response.data.login_message, serverErrorFlag: true })
+        }
+        else {
+          this.setHandler(response.data.all[0], true, response.data.auth_token)
+        }
       })
       .catch(error => console.log(error)
       )
@@ -138,16 +92,17 @@ class TextFields extends Component {
 
   render() {
     const { classes } = this.props;
-    const { loginHandler } = this  
+    const { loginHandler } = this;
+    const { serverError, serverErrorFlag } = this.state
 
     return (
       <div>
+        {this.state.redirect ? <Redirect to="/user-complaint" /> : null}
         <form autoComplete="off" className={classes.froms}>
           <Grid container direction="row" justify="center" alignitems="center">
             <div className={classes.login}>
               <span className={classes.text}>Login</span>
-              {/* <FormErrors formErrors={this.state.formErrors} /> */}
-              {/* className={`form-group ${this.errorClass(this.state.formErrors.username)}`} */}
+
               <div >
                 <Grid item md={6}  >
                   <TextField
@@ -165,7 +120,6 @@ class TextFields extends Component {
 
                 </Grid>
               </div>
-              {/* className={`form-group ${this.errorClass(this.state.formErrors.password)}`} */}
 
               <div >
                 <Grid item md={6}>
@@ -185,14 +139,9 @@ class TextFields extends Component {
               </div>
 
               <Grid item md={12} >
-
-                {/* <Button className={classes.btn} variant="contained" disabled={!this.state.formValid}>
-                  <Link to="/user-complaint" className={classes.divAtag}>Login</Link>
-                </Button> */}
-
                 <Button className={classes.btn} variant="contained" onClick={loginHandler}>Login
                 </Button>
-
+                {serverErrorFlag ? <p style={{ color: 'red', margin: '0', padding: '0' }}>{serverError}</p> : null}
               </Grid>
             </div>
           </Grid>

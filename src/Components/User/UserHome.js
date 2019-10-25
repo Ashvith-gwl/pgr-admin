@@ -4,6 +4,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { withStyles } from '@material-ui/core/styles';
 import LoginNav from './LoginNav'
 import Spinner from '../Spinner/Spinner'
+import { Redirect } from 'react-router-dom'
 
 import axios from "axios";
 
@@ -33,10 +34,24 @@ class SimpleTable extends Component {
 
   state = {
     complainList: [],
-    loading: true
+    loading: true,
+    redirect: false
   };
   componentDidMount() {
+    this.validateFromServer()
     this.refreshHandler();
+  }
+  validateFromServer = () => {
+    axios.post(`https://evening-dawn-93464.herokuapp.com/api/verify`, {
+      "auth_token": sessionStorage.getItem('serverAUTHTOKEN')
+    })
+      .then(response => {
+        if (!response.data.isloggedIn) {
+          this.setState({ redirect: true })
+        }
+      })
+      .catch(error => console.log(error)
+      )
   }
 
   refreshHandler = () => {
@@ -44,7 +59,9 @@ class SimpleTable extends Component {
     const { complainHandler } = this;
 
     axios
-      .get("https://whispering-fortress-83775.herokuapp.com/api/complain")
+      .post("https://whispering-fortress-83775.herokuapp.com/api/getcomplain",{
+        "uuid":sessionStorage.getItem('serverUUID')
+      })
       .then(response => {
 
         complainHandler(response.data.complain);
@@ -65,14 +82,10 @@ class SimpleTable extends Component {
   }
 
   deleteComplaintHandler = (e, uuid) => {
-
-
     axios
       .delete(`https://whispering-fortress-83775.herokuapp.com/api/complain/${uuid}`)
       .then(response => {
-
         this.refreshHandler();
-
       })
       .catch(err => console.log(err));
   }
@@ -127,6 +140,7 @@ class SimpleTable extends Component {
 
     return (
       <div>
+        {this.state.redirect ? <Redirect to="/" /> : null}
         <LoginNav />
         {userhome}
       </div>

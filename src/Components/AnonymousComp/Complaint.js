@@ -3,6 +3,7 @@ import { TextField, Grid, FormControl, Button, InputLabel, Select, MenuItem } fr
 import { Link } from 'react-router-dom'
 import classes from './Complaint.module.css'
 import axios from 'axios'
+
 class Complain extends Component {
     state = {
         name: '',
@@ -14,7 +15,6 @@ class Complain extends Component {
     componentDidMount() {
         axios.get(`https://whispering-fortress-83775.herokuapp.com/api/public_key`)
             .then(response => {
-                console.log(response);
                 this.setState({ publicKey: response.data.public_key[0].uuid })
             })
             .catch(error => console.log(error)
@@ -50,8 +50,9 @@ class Complain extends Component {
             .post(`https://whispering-fortress-83775.herokuapp.com/api/complain/`, {
                 "category_name": this.state.name,
                 "complain_details": this.state.complaint,
-                "type": 'anonymous',
-                "created_by": 'anonymous'
+                "user_id": "Anonymous",
+                "type": 'Anonymous Login',
+                "created_by": 'Anonymous'
             })
             .then(response => {
                 alert('Success')
@@ -73,7 +74,6 @@ class Complain extends Component {
         return (
             <div>
                 <Link to="/" className={classes.divAtag}>Back</Link>
-                {/* <div className={classes.login}> */}
                 <Grid container direction="row" >
                     <Grid md={6} align="right">
                         <div className={classes.labelitem}>
@@ -110,7 +110,6 @@ class Complain extends Component {
                                 open={this.state.open}
                                 onClose={this.handleClose}
                                 onOpen={this.handleOpen}
-                                value={this.state.name}
                                 onChange={this.handleChange}
                                 disabled={enableFlag}
                                 value={this.state.name}
@@ -158,7 +157,6 @@ class Complain extends Component {
                     <Button className={classes.btnn} disabled={enableFlag} variant="contained" color="primary" onClick={this.postComplaintHandler}>
                         Submit</Button>
                 </Grid>
-            {/* </div> */}
             </div>
         )
     }

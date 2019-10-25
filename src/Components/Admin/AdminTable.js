@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { Table, TableBody, TableCell, TableHead, TableRow, Paper, TextField } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableHead, TableRow, Paper, TextField, Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import CheckCircleRoundedIcon from '@material-ui/icons/CheckCircleRounded';
 import Grid from '@material-ui/core/Grid';
 import Spinner from '../Spinner/Spinner'
-
 import axios from "axios";
 
 const styles = {
@@ -56,16 +55,16 @@ class SimpleTable extends Component {
     this.setState({ complainList, loading: false });
   };
 
-  pendingFlagHandler = (e, uuid) => {
+  pendingFlagHandler = (e, complain_id) => {
     this.setState({
       [e.target.name]: e.target.value,
-      tempUUID: uuid
+      tempcomplain_id: complain_id
     })
   }
 
-  submitCommentHandler = (e, uuid) => {
+  submitCommentHandler = (e, complain_id) => {
     axios
-      .put(`https://whispering-fortress-83775.herokuapp.com/api/complain/${uuid}`, {
+      .put(`https://whispering-fortress-83775.herokuapp.com/api/complain/${complain_id}`, {
         "comment": this.state.comment,
         "updated_by": "XXXXXXXXX"
       })
@@ -80,7 +79,7 @@ class SimpleTable extends Component {
 
   render() {
     const { classes } = this.props;
-    const { complainList, comment, tempUUID, loading } = this.state;
+    const { complainList, comment, tempcomplain_id, loading } = this.state;
     const { pendingFlagHandler, submitCommentHandler } = this
     let admintable;
     if (loading) {
@@ -112,7 +111,7 @@ class SimpleTable extends Component {
                     <TableCell style={{ padding: '5px 5px', wordBreak: 'break-word', width: '200px' }}>{row.complain_details}</TableCell>
                     <TableCell >{row.picture}</TableCell>
                     <TableCell >{row.user_id}</TableCell>
-                    <TableCell >{row.status} {row.status === 'Pending' ? <button disabled={row.uuid === tempUUID && comment.length > 10 ? false : true} onClick={e => submitCommentHandler(e, row.uuid)}><CheckCircleRoundedIcon /> </button> : null}</TableCell>
+                    <TableCell >{row.status} {row.status === 'Pending' ? <Button color="primary" disabled={row.complain_id === tempcomplain_id && comment.length > 10 ? false : true} onClick={e => submitCommentHandler(e, row.complain_id)}><CheckCircleRoundedIcon /> </Button> : null}</TableCell>
                     <TableCell >{row.type}</TableCell>
                     <TableCell >{row.comment} {row.comment === null ?
                       <TextField
@@ -124,7 +123,7 @@ class SimpleTable extends Component {
                         margin="normal"
                         variant="outlined"
                         name="comment"
-                        onChange={e => pendingFlagHandler(e, row.uuid)}
+                        onChange={e => pendingFlagHandler(e, row.complain_id)}
                       />
                       : null}
                     </TableCell>

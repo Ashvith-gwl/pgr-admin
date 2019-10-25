@@ -7,7 +7,7 @@ import Navbar from './Navbar'
 import { Link } from 'react-router-dom'
 import { createMuiTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
-import { relative } from 'path';
+import Hidden from '@material-ui/core/Hidden';
 
 const theme = createMuiTheme({ typography: { useNextVariants: true } });
 
@@ -57,17 +57,28 @@ function ButtonAppBar(props) {
     <div className={classes.root}>
       <Navbar />
       <Grid container style={styles.MuiGridcontainer}>
-        <Grid item md={6} xs={12} style={styles.div1} >
-          <div style={styles.divsec1}>
-            <Link to="/complaint" style={styles.divAtag}>Anonymous Complaint</Link>
-          </div>
-        </Grid>
-        <Grid item md={6} xs={12}  >
+
+        <Hidden smDown xsDown>
+          <Grid item md={6} xs={12} style={styles.div1} >
+            <div style={styles.divsec1}>
+              <Link to="/complaint" style={styles.divAtag}>Anonymous Complaint</Link>
+            </div>
+          </Grid>
+        </Hidden>
+
+        <Grid item md={6} xs={12} >
           <ThemeProvider theme={theme}>
             <Login />
           </ThemeProvider>
-
         </Grid>
+
+        <Hidden mdUp xlUp>
+          <Grid item md={6} xs={12} style={styles.div1} >
+            <div style={styles.divsec1}>
+              <Link to="/complaint" style={styles.divAtag}>Anonymous Complaint</Link>
+            </div>
+          </Grid>
+        </Hidden>
       </Grid>
     </div>
   );

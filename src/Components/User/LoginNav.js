@@ -6,6 +6,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
+import axios from 'axios'
 
 const styles = {
   root: {
@@ -18,32 +20,54 @@ const styles = {
     marginLeft: -12,
     marginRight: 20,
   },
-  nav:{
+  nav: {
     backgroundColor: '#2196f3',
   },
-  divAtag:{
-    color:"#fff",
-    textDecoration:"none",
+  divAtag: {
+    color: "#fff",
+    textDecoration: "none",
   }
 };
 
-function Navbar(props) {
-  const { classes } = props;
-  return (
-    <div className={classes.root}>
-      <AppBar position="relative" className={classes.nav}>
-        <Toolbar>
-          <Typography variant="h5" color="inherit" className={classes.grow}>
-            PGR
+class Navbar extends React.Component {
+  state = {
+    redirect: false
+  }
+
+  logoutHandler = () => {
+    axios.put(`https://evening-dawn-93464.herokuapp.com/api/logout`, {
+      "auth_token": sessionStorage.getItem('serverAUTHTOKEN')
+    })
+      .then(response => {
+        sessionStorage.clear()
+        if (!response.data.isloggedIn) {
+          this.setState({ redirect: true })
+        }
+      })
+      .catch(error => console.log(error)
+      )
+
+  }
+  render() {
+    const { classes } = this.props;
+    return (
+      <div className={classes.root}>
+        {this.state.redirect ? <Redirect to="/" /> : null}
+        <AppBar position="relative" className={classes.nav}>
+          <Toolbar>
+            <Typography variant="h5" color="inherit" className={classes.grow}>
+              PGR
           </Typography>
-          <Button color="inherit"><Link to='user-complaint' className={classes.divAtag}>Home</Link></Button>
-          <Button color="inherit"><Link to='user-home' className={classes.divAtag}>Dashboard</Link></Button>
-          <Button color="inherit"><Link to='/' className={classes.divAtag}>Logout</Link></Button>
-        </Toolbar>
-      </AppBar>
-    </div>
-  );
+            <Button color="inherit"><Link to='user-complaint' className={classes.divAtag}>Home</Link></Button>
+            <Button color="inherit"><Link to='user-home' className={classes.divAtag}>Dashboard</Link></Button>
+            <Button color="inherit" className={classes.divAtag} onClick={this.logoutHandler}>Logout</Button>
+          </Toolbar>
+        </AppBar>
+      </div>
+    );
+  }
 }
+
 
 Navbar.propTypes = {
   classes: PropTypes.object.isRequired,
