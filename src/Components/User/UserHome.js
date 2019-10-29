@@ -81,9 +81,9 @@ class SimpleTable extends Component {
     })
   }
 
-  deleteComplaintHandler = (e, uuid) => {
+  deleteComplaintHandler = (e, cpid) => {
     axios
-      .delete(`https://whispering-fortress-83775.herokuapp.com/api/complain/${uuid}`)
+      .delete(`https://whispering-fortress-83775.herokuapp.com/api/complain/${cpid}`)
       .then(response => {
         this.refreshHandler();
       })
@@ -123,7 +123,7 @@ class SimpleTable extends Component {
                     <TableCell>{row.complain_details}</TableCell>
                     <TableCell >{row.status}</TableCell>
                     <TableCell >{row.comment}</TableCell>
-                    <TableCell onClick={e => deleteComplaintHandler(e, row.uuid)} >
+                    <TableCell onClick={e => deleteComplaintHandler(e, row.complain_id)} >
                       <IconButton aria-label="Delete" >
                         <DeleteIcon fontSize="medium" color="primary" />
                       </IconButton>
