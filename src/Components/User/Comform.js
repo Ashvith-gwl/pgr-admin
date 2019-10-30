@@ -124,6 +124,7 @@ class Complain extends Component {
               <MenuItem value={"IT"}>IT</MenuItem>
               <MenuItem value={"HR"}>HR</MenuItem>
               <MenuItem value={"Network"}>Network</MenuItem>
+              <MenuItem value={"POSCH"}>POSCH</MenuItem>
             </Select>
           </FormControl>
         </Grid>
